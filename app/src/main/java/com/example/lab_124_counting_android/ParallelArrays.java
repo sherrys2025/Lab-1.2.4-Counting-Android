@@ -3,14 +3,14 @@ package com.example.lab_124_counting_android;
 import java.util.Arrays;
 
 public class ParallelArrays {
-    private static String words[] = new String[0];
-    private static int cnt[] = new int[0];
+    private String words[] = new String[0];
+    private int cnt[] = new int[0];
 
-    private static void expand(){
+    private void expand(){
         words = Arrays.copyOf(words, words.length+1);
         cnt = Arrays.copyOf(cnt, cnt.length+1);
     }
-    public static void add(String word){
+    public void add(String word){
         if(!contains(word)){
             expand();
             words[words.length-1] = word;
@@ -18,7 +18,7 @@ public class ParallelArrays {
         }
     }
 
-    private static boolean contains(String word){
+    private boolean contains(String word){
         for (int i = 0; i < words.length; i++){
             if(words[i].equals(word)){
                 cnt[i]++;
@@ -28,11 +28,11 @@ public class ParallelArrays {
         return false;
     }
 
-    public static String[] getWords(){
+    public String[] getWords(){
         return words;
     }
 
-    public static int[] getCnt(){
+    public int[] getCnt(){
         return cnt;
     }
 }

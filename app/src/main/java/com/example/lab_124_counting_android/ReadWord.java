@@ -1,29 +1,35 @@
 package com.example.lab_124_counting_android;
 
+import android.content.res.AssetManager;
+
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class ReadWord {
-    private File readFile;
     private ArrayList<String> wordList;
 
-    public ReadWord(String fileName) throws FileNotFoundException {
+    public ReadWord(AssetManager assetManager,String fileName) throws IOException {
+        InputStream inputStream = assetManager.open(fileName);
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
         wordList = new ArrayList<>();
-        this.readFile = new File(fileName);
-        Scanner scanner = new Scanner(readFile);
-        while (scanner.hasNextLine()) {
-            String line = scanner.nextLine();
+        String line = "";
+        while ((line = bufferedReader.readLine())!= null) {
             for (String word: line.split(" ")){
                 if (word.length() != 0) {
                     word = filterWord(word);
                     wordList.add(word);
+
                 }
             }
         }
 
-        //System.out.println(wordList.toString());
+        System.out.println(wordList.toString());
 
     }
 

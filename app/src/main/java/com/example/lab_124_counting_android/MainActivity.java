@@ -1,11 +1,13 @@
 package com.example.lab_124_counting_android;
 
+import android.content.res.AssetManager;
 import android.os.Bundle;
 
 import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.text.Html;
 import android.view.View;
 
 import androidx.core.view.WindowCompat;
@@ -19,6 +21,9 @@ import com.example.lab_124_counting_android.databinding.ActivityMainBinding;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
 public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration appBarConfiguration;
@@ -27,24 +32,56 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        AssetManager assetManager = this.getApplicationContext().getAssets();
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        setSupportActionBar(binding.toolbar);
 
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
-        appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
-        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
-
-        binding.fab.setOnClickListener(new View.OnClickListener() {
+        binding.button1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAnchorView(R.id.fab)
-                        .setAction("Action", null).show();
+                String filename = String.valueOf(binding.editText1.getText());
+//                NavHostFragment.findNavController(FirstFragment.this)
+//                        .navigate(R.id.action_FirstFragment_to_SecondFragment);
+                Counter counter;
+                try {
+                    counter = new Counter(assetManager,filename);
+                } catch (FileNotFoundException e) {
+                    throw new RuntimeException(e);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+
+                String toDisplay = "The most common word in the text file \"<font color=\"#6682B5\"><b>" + filename + "</b></font>\" is \"<font color=\"#6682B5\"><b>" + counter.topN(0)[0] + "</b></font>\" with <font color=\"#6682B5\"><b>" + counter.topN(0)[1] + "</b></font> occurences.";
+                binding.textView.setText(Html.fromHtml(toDisplay));
             }
         });
+
+        binding.button2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String filename = String.valueOf(binding.editText1.getText());
+//                NavHostFragment.findNavController(FirstFragment.this)
+//                        .navigate(R.id.action_FirstFragment_to_SecondFragment);
+                Counter counter;
+                try {
+                    counter = new Counter(assetManager,filename);
+                } catch (FileNotFoundException e) {
+                    throw new RuntimeException(e);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+
+                String toDisplay = "The top five most common words in the text file \"<font color=\"#6682B5\"><b>" + filename + "</b></font>\" are <br><br>";
+                for (int i = 0; i < 5; i++) {
+                    toDisplay += i+1 + ". \"" + "<font color=\"#6682B5\"><b>"+counter.topN(i)[0] + "</b></font>\" with <font color=\"#6682B5\"><b>" + counter.topN(i)[1] + "</b></font> occurences <br>";
+                }
+                binding.textView.setText(Html.fromHtml(toDisplay));
+            }
+        });
+
+
     }
 
     @Override

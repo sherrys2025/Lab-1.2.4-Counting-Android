@@ -1,15 +1,18 @@
 package com.example.lab_124_counting_android;
 
+import android.content.res.AssetManager;
+
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 public class Counter {
     private static int[] maxFive;
     private static int[] counts;
     private static String[] words;
-    public Counter(String filename) throws FileNotFoundException {
-        CheckWord commonWords = new CheckWord();
+    public Counter(AssetManager assetManager,String filename) throws IOException {
+        CheckWord commonWords = new CheckWord(assetManager);
 
-        ReadWord readWord = new ReadWord(filename);
+        ReadWord readWord = new ReadWord(assetManager, filename);
 
         ParallelArrays parallelArrays = new ParallelArrays();
 
@@ -29,7 +32,7 @@ public class Counter {
     }
 
     public static String[] topN(int n){
-        return new String[]{words[n], String.valueOf(counts[n])};
+        return new String[]{words[maxFive[n]], String.valueOf(counts[maxFive[n]])};
     }
 
     private static int[] find5MaxIndex(int[] counts) {
